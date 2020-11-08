@@ -18,13 +18,19 @@ impl TryFrom<&[u8]> for Request {
         let request = str::from_utf8(buf)?;
 
         let (method, request) = get_next_word(request).ok_or(ParseError::InvalidRequest)?;
-        let (path, request) = get_next_word(request).ok_or(ParseError::InvalidRequest)?;
+        let (mut path, request) = get_next_word(request).ok_or(ParseError::InvalidRequest)?;
         let (protocol, _) = get_next_word(request).ok_or(ParseError::InvalidRequest)?;
         if protocol != "HTTP/1.1" {
             return Err(ParseError::InvalidProtocol);
         }
 
         let method: Method = method.parse()?;
+
+        let mut query = None;
+        if let Some(i) = path.find('?') {
+            query = Some(&path[i + 1..]);
+            path = &path[..i];
+        }
 
         unimplemented!();
     }
