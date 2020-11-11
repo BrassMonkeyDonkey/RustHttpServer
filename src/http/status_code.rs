@@ -4,7 +4,7 @@ use std::fmt::{Display, Formatter, Result as FmtResult};
 pub enum StatusCode {
     Ok = 200,
     BadRequest = 400,
-    RequestNotFound = 404
+    NotFound = 404
 }
 
 impl StatusCode {
@@ -12,7 +12,7 @@ impl StatusCode {
         match self {
             Self::Ok => "OK",
             Self::BadRequest => "Bad request",
-            Self::RequestNotFound => "Request not found"
+            Self::NotFound => "Not found"
         }
     }
 }

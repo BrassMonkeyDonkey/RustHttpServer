@@ -1,8 +1,8 @@
 use std::convert::TryFrom;
-use std::io::Read;
+use std::io::{Write, Read};
 use std::net::TcpListener;
 
-use crate::http::Request;
+use crate::http::{Request, Response, StatusCode};
 
 pub struct Server {
     addr: String,
@@ -25,8 +25,11 @@ impl Server {
                             println!("Received a request: {}", String::from_utf8_lossy(&buffer));
 
                             match Request::try_from(&buffer[..]) {
-                                Ok(request) => {
+                                Ok(request) => {                                    
                                     dbg!(request);
+
+                                    let response = Response::new(StatusCode::Ok, Some("<h1>I WON!</h1>".to_string()));
+                                    write!(stream, "{}", response);
                                 },
                                 Err(e) => println!("Failed to parse a request: {}", e),
                             }
